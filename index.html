@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INVENTORBLOCKS v5.10.4</title>
+  <!-- CSS completo embutido: não depende de arquivos externos. -->
+  <style id="inventorblocks-main-style">
+/* INVENTORBLOCKS v5.6.3 - CSS estável */
+:root {
+  --bg: #f3f4f6;
+  --panel: #ffffff;
+  --text: #1f2937;
+  --muted: #64748b;
+  --border: #d1d5db;
+  --primary: #111827;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 100%; min-width: 100%; height: 100%; min-height: 100%; }
+body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+header {
+  flex: 0 0 auto;
+  min-height: 82px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 20;
+}
+header h1 { margin: 0; font-size: 24px; letter-spacing: .4px; }
+
+.brand-logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  max-width: min(440px, 42vw);
+  object-fit: contain;
+}
+@media (max-width: 980px) {
+  .brand-logo {
+    height: 48px;
+    max-width: 78vw;
+  }
+}
+@media (max-width: 600px) {
+  .brand-logo {
+    height: 42px;
+    max-width: 86vw;
+  }
+}
+
+header {
+  background: #1D4ED8;
+  border-bottom-color: #1E40AF;
+  color: #ffffff;
+}
+header h1, header p { color: #ffffff; }
+header .toolbar button {
+  background: rgba(255,255,255,.12);
+  color: #ffffff;
+  border-color: rgba(255,255,255,.72);
+}
+header .toolbar button:hover:not(:disabled) {
+  background: rgba(255,255,255,.22);
+}
+header .toolbar #btnRun {
+  background: #16A34A;
+  color: #ffffff;
+  border-color: #15803D;
+}
+header .toolbar #btnRun:hover:not(:disabled) {
+  background: #15803D;
+}
+header .toolbar button:disabled {
+  color: #ffffff;
+}
+header p { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.toolbar { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+button {
+  appearance: none;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #1f2937;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font: 600 13px/1.2 Arial, Helvetica, sans-serif;
+  white-space: nowrap;
+}
+button:hover:not(:disabled) { background: #f8fafc; }
+button:focus-visible { outline: 3px solid rgba(59,130,246,.25); outline-offset: 1px; }
+button.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+button:disabled { opacity: .48; cursor: not-allowed; }
+
+main {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(310px, 370px);
+  overflow: hidden;
+}
+.workspace-area { min-width: 0; min-height: 0; height: 100%; position: relative; overflow: hidden; }
+#blocklyDiv { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 320px; }
+
+aside {
+  min-width: 0;
+  height: 100%;
+  padding: 12px;
+  overflow: auto;
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+}
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; margin-bottom: 12px; }
+.card h2 { margin: 0 0 10px; font-size: 15px; }
+.connection-list { display: grid; gap: 8px; }
+.status { padding: 9px 10px; border-radius: 8px; font-size: 13px; font-weight: 700; }
+.connected { background: #dcfce7; color: #166534; }
+.disconnected { background: #fee2e2; color: #991b1b; }
+.status.neutral, .neutral { background: #e2e8f0; color: #334155; }
+.connection-help { margin: 10px 0 0; font-size: 12px; line-height: 1.4; color: var(--muted); }
+pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-family: Consolas, "Courier New", monospace; font-size: 12px; }
+#generatedCode { min-height: 160px; max-height: 340px; overflow: auto; background: #f8fafc; padding: 10px; border-radius: 8px; }
+#console { min-height: 150px; max-height: 280px; overflow: auto; background: #111827; color: #e5e7eb; padding: 10px; border-radius: 8px; }
+.console-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.console-header h2 { margin: 0; }
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.card-title-row h2 { margin: 0; }
+.card-toggle {
+  width: 32px;
+  min-width: 32px;
+  padding: 5px 7px;
+  font-size: 16px;
+  line-height: 1;
+}
+.card.collapsed .card-body { display: none; }
+.card.collapsed .card-title-row { margin-bottom: 0; }
+
+
+/* Painel lateral direito recolhível */
+main {
+  position: relative;
+  transition: grid-template-columns .22s ease;
+}
+main.right-panel-collapsed {
+  grid-template-columns: minmax(0, 1fr) 0px;
+}
+main.right-panel-collapsed aside {
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border-left: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+aside {
+  transition: width .22s ease, min-width .22s ease, padding .22s ease, opacity .18s ease;
+}
+#toggleRightPanel {
+  position: absolute;
+  z-index: 60;
+  top: 50%;
+  right: 362px;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 54px;
+  min-width: 28px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid #93c5fd;
+  border-radius: 9px 0 0 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, .14);
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1;
+  cursor: pointer;
+  transition: right .22s ease, background .15s ease, color .15s ease;
+}
+#toggleRightPanel:hover {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+main.right-panel-collapsed #toggleRightPanel {
+  right: 0;
+}
+@media (max-width: 980px) {
+  #toggleRightPanel { display: none; }
+}
+
+/* Blockly: manter toolbox e flyout visíveis sem alterar a escala interna. */
+.blocklyToolboxDiv {
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 10 !important;
+  font-size: 13px !important;
+  min-width: 128px !important;
+}
+.blocklyToolboxContents {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+.blocklyTreeRow {
+  min-height: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  margin-bottom: 2px !important;
+}
+.blocklyTreeLabel {
+  font-size: 13px !important;
+}
+.blocklyFlyout {
+  z-index: 9 !important;
+}
+.blocklyFlyoutBackground {
+  fill-opacity: .96;
+}
+.blocklyWidgetDiv,
+.blocklyDropDownDiv {
+  z-index: 99999 !important;
+}
+
+@media (max-width: 980px) {
+  body { overflow: auto; }
+  header { align-items: flex-start; flex-direction: column; }
+  .toolbar { justify-content: flex-start; width: 100%; }
+  main { min-height: 780px; grid-template-columns: 1fr; grid-template-rows: minmax(480px, 62vh) auto; overflow: visible; }
+  .workspace-area { min-height: 480px; }
+  aside { height: auto; overflow: visible; border-left: 0; border-top: 1px solid var(--border); }
+}
+
+@media (max-width: 600px) {
+  header { padding: 10px; }
+  header h1 { font-size: 21px; }
+  .toolbar { display: grid; grid-template-columns: 1fr 1fr; }
+  button { width: 100%; font-size: 12px; padding: 9px 7px; }
+  main { grid-template-rows: minmax(430px, 60vh) auto; }
+  .workspace-area { min-height: 430px; }
+  aside { padding: 8px; }
+}
+
+
+/* =========================================================
+   MENU LATERAL DE SEGURANÇA
+   Aparece somente quando a toolbox nativa do Blockly falhar.
+   ========================================================= */
+.fallback-toolbox {
+  display: none;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 178px;
+  z-index: 40;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px;
+  background: #ffffff;
+  border-right: 1px solid #d1d5db;
+  box-shadow: 2px 0 8px rgba(0,0,0,.08);
+}
+.workspace-area.fallback-toolbox-active .fallback-toolbox {
+  display: block;
+}
+.workspace-area.fallback-toolbox-active #blocklyDiv {
+  left: 178px;
+  width: calc(100% - 178px);
+}
+.fallback-title {
+  padding: 8px 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #475569;
+}
+.fallback-toolbox details {
+  margin: 0 0 5px;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+.fallback-toolbox summary {
+  cursor: pointer;
+  padding: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  user-select: none;
+}
+.fallback-toolbox details button {
+  display: block;
+  width: calc(100% - 10px);
+  margin: 0 5px 5px;
+  padding: 7px 8px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  background: #ffffff;
+}
+#blocklyError {
+  display: none;
+  position: absolute;
+  z-index: 100;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  padding: 12px;
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* v5.10.4 - correção de interação da barra lateral Blockly */
+.blocklyToolboxDiv {
+  pointer-events: auto !important;
+  z-index: 30 !important;
+}
+.blocklyFlyout,
+.blocklyFlyoutScrollbar,
+.blocklyScrollbarHandle {
+  pointer-events: auto !important;
+}
+.blocklyFlyout { z-index: 29 !important; }
+.blocklyWidgetDiv, .blocklyDropDownDiv { z-index: 99999 !important; }
+.fallback-toolbox { pointer-events: auto; }
+
+  
+/* Tela inicial iBlocks */
+#iblocksSplash {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1D4ED8;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .28s ease, visibility .28s ease;
+}
+#iblocksSplash.splash-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+#iblocksEnter {
+  display: block;
+  width: min(920px, 88vw);
+  max-height: 82vh;
+  object-fit: contain;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 12px 28px rgba(0,0,0,.16));
+  transition: transform .14s ease;
+}
+#iblocksEnter:hover { transform: scale(1.015); }
+#iblocksEnter:active { transform: scale(.99); }
+
+</style>
+
+  <!-- Blockly via CDN. Sem Node.js / npm / Vite -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/10.4.2/blockly_compressed.js" onerror="this.onerror=null;this.src='https://unpkg.com/blockly@10.4.2/blockly_compressed.js'"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/10.4.2/blocks_compressed.js" onerror="this.onerror=null;this.src='https://unpkg.com/blockly@10.4.2/blocks_compressed.js'"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/blockly/10.4.2/javascript_compressed.js" onerror="this.onerror=null;this.src='https://unpkg.com/blockly@10.4.2/javascript_compressed.js'"></script>
+  <script src="https://unpkg.com/blockly@10.4.2/msg/pt-br.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/blockly@10.4.2/msg/pt-br.js'"></script>
+</head>
+
+<body>
+  <div id="iblocksSplash" role="dialog" aria-label="Entrar no iBlocks">
+    <img id="iblocksEnter" src="assets/iblocks-enter.png" alt="iBlocks - Entrar" tabindex="0">
+  </div>
+
+  <header>
+    <div>
+      <img class="brand-logo" src="assets/iblocks-logo-white-border.png" alt="iBlocks">
+    </div>
+
+    <div class="toolbar">
+      <button id="btnConnectUsb">Conectar USB</button>
+      <button id="btnDisconnectUsb" disabled>Desconectar USB</button>
+      <button id="btnConnectBle">Conectar Bluetooth</button>
+      <button id="btnDisconnectBle" disabled>Desconectar Bluetooth</button>
+      <button id="btnRun" class="primary">Executar</button>
+      <button id="btnStop" disabled>Parar</button>
+      <button id="btnClear">Limpar</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="workspace-area">
+
+      <nav id="fallbackToolbox" class="fallback-toolbox" aria-label="Blocos do InventorBlocks">
+      <div class="fallback-title">BLOCOS</div>
+      <details open>
+        <summary>Controle</summary>
+        <button type="button" data-block-type="inicio">Início</button>
+        <button type="button" data-block-type="esperar_ms">Esperar segundos</button>
+      </details>
+      <details>
+        <summary>Sensores</summary>
+        <button type="button" data-block-type="ler_botao">LerBotão</button>
+        <button type="button" data-block-type="ler_distancia_hc04">LerDistância</button>
+        <button type="button" data-block-type="ler_inclinacao">LerInclinação A-0/A-1</button>
+        <button type="button" data-block-type="ler_luz">LerLuz A-0/A-1</button>
+        <button type="button" data-block-type="ler_som">LerSom A-0/A-1</button>
+        <button type="button" data-block-type="ler_magnetico">LerMagnético A-0/A-1</button>
+        <button type="button" data-block-type="ler_infravermelho">LerInfravermelho A-0/A-1</button>
+      </details>
+      <details>
+        <summary>Atuadores</summary>
+        <button type="button" data-block-type="ligar_led">LigarLed</button>
+        <button type="button" data-block-type="desligar_led">DesligarLed</button>
+        <button type="button" data-block-type="ligar_sirene">LigarSirene</button>
+        <button type="button" data-block-type="desligar_sirene">DesligarSirene</button>
+        <button type="button" data-block-type="motor_duplo">Motor M1/M2</button>
+        <button type="button" data-block-type="mover_servo_9g">MoverServo</button>
+        <button type="button" data-block-type="escrever_display">EscreverDisplay</button>
+        <button type="button" data-block-type="limpar_display">LimparDisplay</button>
+        <button type="button" data-block-type="texto_display">Texto</button>
+        <button type="button" data-block-type="graus_servo">Ângulo</button>
+      </details>
+      <details>
+        <summary>Lógica</summary>
+        <button type="button" data-block-type="controls_if">Se / Senão se / Senão</button>
+        <button type="button" data-block-type="logica_comparacao">Comparação</button>
+        <button type="button" data-block-type="logic_boolean">Verdadeiro / Falso</button>
+        <button type="button" data-block-type="logic_operation">E / OU</button>
+        <button type="button" data-block-type="repita_vezes">Repita</button>
+        <button type="button" data-block-type="repita_enquanto">Repita enquanto</button>
+        <button type="button" data-block-type="para_variavel">Para variável</button>
+      </details>
+      <details>
+        <summary>Matemática</summary>
+        <button type="button" data-action="create-variable">Criar variável</button>
+        <button type="button" data-block-type="atribuir_inteiro">Atribuir</button>
+        <button type="button" data-block-type="numero_inteiro">Número inteiro</button>
+        <button type="button" data-block-type="sortear_numeros">SortearNúmeros</button>
+        <button type="button" data-block-type="variavel_valor">Variável (valor)</button>
+        <button type="button" data-block-type="exibir_variavel">Exibir</button>
+      </details>
+</nav>
+      <div id="blocklyDiv"></div>
+      <div id="blocklyError"></div>
+    </section>
+
+    <button id="toggleRightPanel" type="button" aria-label="Minimizar painel lateral" aria-expanded="true" title="Minimizar painel lateral">›</button>
+
+    <aside>
+      <section class="card" id="cardConnections">
+        <div class="card-title-row">
+          <h2>Conexões</h2>
+          <button class="card-toggle" type="button" data-card="cardConnections" aria-expanded="true" title="Minimizar/Maximizar">−</button>
+        </div>
+        <div class="card-body">
+          <div class="connection-list">
+            <div id="statusUsb" class="status disconnected">USB: desconectado</div>
+            <div id="statusBle" class="status disconnected">Bluetooth LE: desconectado</div>
+            <div id="statusActive" class="status neutral">Canal ativo: nenhum</div>
+          </div>
+          <p class="connection-help">Se USB e Bluetooth estiverem conectados, o último canal selecionado será usado para executar os blocos.</p>
+        </div>
+      </section>
+
+      <section class="card" id="cardCode">
+        <div class="card-title-row">
+          <h2>Código Arduino gerado</h2>
+          <button class="card-toggle" type="button" data-card="cardCode" aria-expanded="true" title="Minimizar/Maximizar">−</button>
+        </div>
+        <div class="card-body">
+          <pre id="generatedCode">// Coloque o bloco Início e conecte os comandos.</pre>
+        </div>
+      </section>
+
+      <section class="card" id="cardConsole">
+        <div class="console-header">
+          <h2>Console</h2>
+          <div>
+            <button id="btnClearConsole">Limpar console</button>
+            <button class="card-toggle" type="button" data-card="cardConsole" aria-expanded="true" title="Minimizar/Maximizar">−</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <pre id="console"></pre>
+        </div>
+      </section>
+    </aside>
+  </main>
+<script src="js/blocks.js"></script>
+  <script src="js/toolbox.js"></script>
+  <script src="js/app.js"></script>
+
+<script>
+(() => {
+  const splash = document.getElementById("iblocksSplash");
+  const enter = document.getElementById("iblocksEnter");
+  const abrir = () => {
+    if (!splash) return;
+    splash.classList.add("splash-hidden");
+    setTimeout(() => { splash.style.display = "none"; }, 300);
+    setTimeout(() => {
+      if (window.Blockly && window.workspace) Blockly.svgResize(window.workspace);
+    }, 340);
+  };
+  if (enter) {
+    enter.addEventListener("click", abrir);
+    enter.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        abrir();
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
